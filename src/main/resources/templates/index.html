@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <section>
+        <div>
+            <h1>FCM 테스트</h1>
+            <button onclick="load_fcm_token()">토큰 저장</button>
+        </div>
+    </section>
+</body>
+<script>
+    /*
+        https://firebase.google.com/docs/cloud-messaging/manage-tokens?hl=ko
+        정기적 토큰 업데이트 권장.. ( 1달 간격 ) 추후 추가 예정
+        WebView 에서 호출 할 함수
+     */
+    function load_fcm_token() {
+        if(typeof Android !=='undefined') {
+            alert('안드로이드')
+            Android.get_fcm_token();
+        } else if(window.webkit) {
+            alert('IOS')
+            if (window.webkit.messageHandlers) window.webkit.messageHandlers.HybridApp.postMessage('get_fcm_token');
+        } else {
+            alert('안드로이드 또는 IOS에서만 사용 가능합니다.');
+        }
+    }
+
+    /*
+        토큰 받아오기
+        WebView 에서 호출될 함수
+        토큰값을 DB에 저장..
+     */
+    async function set_fcm_token(data) {
+        const save_api_url = "/token/save";
+        const save_api_data = {
+            token: data
+        };
+        typeof Android !== 'undifined' ? save_api_data['device'] = 'A' : save_api_data['device'] = 'I';
+
+        const response = await fetch(save_api_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(save_api_data),
+        });
+
+        const result = await response.json();
+        alert(result.message);
+    }
+</script>
+</html>
