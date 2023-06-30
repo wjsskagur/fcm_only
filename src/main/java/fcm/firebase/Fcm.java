@@ -160,7 +160,7 @@ public class Fcm {
         @param imageUrl : 이미지 URL
         @return : Firebase Cloud Messaging 메세지 객체
     */
-    public Message setSingleMessage(String title, String body, String imageUrl, String targetToken) {
+    public Message setSingleMessage(String title, String body, String imageUrl, String targetToken, String linkUrl) {
         Message message;
 
         if (hasText(imageUrl)) {
@@ -170,6 +170,28 @@ public class Fcm {
                             .setBody(body)
                             .setImage(imageUrl)
                             .build())
+                    .setApnsConfig(ApnsConfig.builder()
+                            .setAps(Aps.builder()
+                                    .setAlert(ApsAlert.builder()
+                                            .setTitle(title)
+                                            .setBody(body)
+                                            .build())
+                                    .setMutableContent(true)
+                                    .build())
+                            .setFcmOptions(ApnsFcmOptions.builder()
+                                    .setImage(imageUrl)
+                                    .build())
+                            .build())
+
+                    .setAndroidConfig(AndroidConfig.builder()
+                            .setNotification(AndroidNotification.builder()
+                                    .setTitle(title)
+                                    .setBody(body)
+                                    .setImage(imageUrl)
+                                    .build())
+                            .build())
+                    .putData("link", linkUrl)
+                    .putData("image",imageUrl)
                     .setToken(targetToken)
                     .build();
         } else {
@@ -198,7 +220,7 @@ public class Fcm {
         @param imageUrl : 이미지 URL
         @return : 다중 FCM 메세지 객체
     */
-    public MulticastMessage setMulticastMessage(String title, String body, String imageUrl, List<String> registrationTokens) {
+    public MulticastMessage setMulticastMessage(String title, String body, String imageUrl, List<String> registrationTokens, String linkUrl) {
         MulticastMessage multicastMessage;
 
         if (hasText(imageUrl)) {
@@ -208,6 +230,30 @@ public class Fcm {
                             .setBody(body)
                             .setImage(imageUrl)
                             .build())
+
+                    .setApnsConfig(ApnsConfig.builder()
+                            .setAps(Aps.builder()
+                                    .setAlert(ApsAlert.builder()
+                                            .setTitle(title)
+                                            .setBody(body)
+                                            .build())
+                                    .setMutableContent(true)
+                                    .build())
+                            .setFcmOptions(ApnsFcmOptions.builder()
+                                    .setImage(imageUrl)
+                                    .build())
+                            .build())
+
+                    .setAndroidConfig(AndroidConfig.builder()
+                            .setNotification(AndroidNotification.builder()
+                                    .setTitle(title)
+                                    .setBody(body)
+                                    .setImage(imageUrl)
+                                    .build())
+                            .build())
+                    .putData("link", linkUrl)
+                    .putData("image",imageUrl)
+
                     .addAllTokens(registrationTokens)
                     .build();
         } else {

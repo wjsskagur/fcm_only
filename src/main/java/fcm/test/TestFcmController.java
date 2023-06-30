@@ -54,7 +54,7 @@ public class TestFcmController {
             return new JSONResponse<>(500, "fail", e.getMessage());
         }
 
-        Message message = fcm.setSingleMessage(dto.getTitle(), dto.getBody(), dto.getImageUrl(), dto.getToken());
+        Message message = fcm.setSingleMessage(dto.getTitle(), dto.getBody(), dto.getImageUrl(), dto.getToken(), dto.getLinkUrl());
         try {
             response = fcm.sendSingleMessage(message);
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class TestFcmController {
             return new JSONResponse<>(500, "fail", e.getMessage());
         }
 
-        MulticastMessage message = fcm.setMulticastMessage(dto.getTitle(), dto.getBody(), dto.getImageUrl(), dto.getTokens());
+        MulticastMessage message = fcm.setMulticastMessage(dto.getTitle(), dto.getBody(), dto.getImageUrl(), dto.getTokens(), dto.getLinkUrl());
         BatchResponse response;
         try {
             response = fcm.sendMultiMessage(message);
